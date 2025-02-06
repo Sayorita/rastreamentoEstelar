@@ -13,7 +13,7 @@ class TelescopeControl(ctk.CTk):
         super().__init__()
         self.tracking_active = False  # Novo estado de rastreamento
         self.current_astro = None     # Astro sendo rastreado
-        self.calibrated = False
+        # self.calibrated = False
         self.title("Controle do Telescópio Espacial 🌌")
         self.geometry("1000x800")
         self.serial_connection = None
@@ -53,108 +53,69 @@ class TelescopeControl(ctk.CTk):
             self.astro_buttons.append(btn)
     
     def create_widgets(self):
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(0, weight=1)
+            self.grid_columnconfigure(0, weight=1)
+            self.grid_rowconfigure(0, weight=1)
 
-        self.main_frame = ctk.CTkFrame(self, corner_radius=10)
-        self.main_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
-        self.main_frame.grid_columnconfigure(0, weight=1)
+            self.main_frame = ctk.CTkFrame(self, corner_radius=10)
+            self.main_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+            self.main_frame.grid_columnconfigure(0, weight=1)
 
-        self.location_frame = ctk.CTkFrame(self.main_frame)
-        self.location_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
+            self.location_frame = ctk.CTkFrame(self.main_frame)
+            self.location_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
-        self.connection_frame = ctk.CTkFrame(self.main_frame)
-        self.connection_frame.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
-        
-        self.btn_connect = ctk.CTkButton(self.connection_frame, text="🔌 Conectar Arduino", command=self.connect_arduino)
-        self.btn_connect.pack(side="left", padx=10, pady=5)
-        
-        self.connection_status = ctk.CTkLabel(self.connection_frame, text="⭕ Desconectado", text_color="red")
-        self.connection_status.pack(side="left", padx=10)
-        
-        # Crie o frame de controle antes de usá-lo
-        self.control_frame = ctk.CTkFrame(self.main_frame)
-        self.control_frame.grid(row=5, column=0, padx=10, pady=10, sticky="ew")
-        
-        # Botão de rastreamento contínuo (novo)
-        self.btn_track = ctk.CTkButton(
-            self.control_frame, 
-            text="🔄 Iniciar Rastreamento", 
-            command=self.toggle_tracking,
-            state="disabled",  # Desabilitado inicialmente
-            fg_color="#00AA00",
-            hover_color="#008800"
-        )
-        self.btn_track.pack(side="left", padx=5)
-        
-        self.btn_stop = ctk.CTkButton(
-            self.control_frame, 
-            text="⏹ Interromper Rastreamento", 
-            command=self.stop_tracking, 
-            state="disabled",  # Desabilitado inicialmente
-            fg_color="#FF0000", 
-            hover_color="#CC0000"
-        )
-        self.btn_stop.pack(side="left", padx=5)
+            self.connection_frame = ctk.CTkFrame(self.main_frame)
+            self.connection_frame.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+            
+            self.btn_connect = ctk.CTkButton(self.connection_frame, text="🔌 Conectar Arduino", command=self.connect_arduino)
+            self.btn_connect.pack(side="left", padx=10, pady=5)
+            
+            self.connection_status = ctk.CTkLabel(self.connection_frame, text="⭕ Desconectado", text_color="red")
+            self.connection_status.pack(side="left", padx=10)
+            
+            # Crie o frame de controle antes de usá-lo
+            self.control_frame = ctk.CTkFrame(self.main_frame)
+            self.control_frame.grid(row=5, column=0, padx=10, pady=10, sticky="ew")
+            
+            # Botão de rastreamento contínuo (novo)
+            self.btn_track = ctk.CTkButton(
+                self.control_frame, 
+                text="🔄 Iniciar Rastreamento", 
+                command=self.toggle_tracking,
+                state="disabled",
+                fg_color="#00AA00",
+                hover_color="#008800"
+            )
+            self.btn_track.pack(side="left", padx=5)
+            
+            self.btn_stop = ctk.CTkButton(self.control_frame, text="⏹ Interromper Rastreamento", command=self.stop_tracking, fg_color="#FF0000", hover_color="#CC0000")
+            self.btn_stop.pack(side="left", padx=5)
 
-        # Botão de calibração
-        self.btn_calibrate = ctk.CTkButton(
-            self.control_frame,
-            text="🧭 Calibrar Telescópio",
-            command=self.calibrate_telescope,
-            state="disabled",  # Desabilitado inicialmente
-            fg_color="blue",
-            hover_color="darkblue"
-        )
-        self.btn_calibrate.pack(side="left", padx=5)
+            # Novo label de status de rastreamento
+            self.tracking_status = ctk.CTkLabel(self.main_frame, text="Status: Não está rastreando", font=("Arial", 12))
+            self.tracking_status.grid(row=6, column=0, padx=10, pady=5)
 
-        # Novo label de status de rastreamento
-        self.tracking_status = ctk.CTkLabel(self.main_frame, text="Status: Não está rastreando", font=("Arial", 12))
-        self.tracking_status.grid(row=6, column=0, padx=10, pady=5)
+            # self.btn_calibrate = ctk.CTkButton(
+            #     self.main_frame, 
+            #     text="🧭 Calibrar Posição Inicial", 
+            #     command=self.calibrate_north, 
+            #     fg_color="blue", 
+            #     hover_color="darkblue"
+            # )
+            # self.btn_calibrate.grid(row=4, column=0, padx=10, pady=10, sticky="ew")
 
-        self.astros_list = ctk.CTkScrollableFrame(self.main_frame, height=200)
-        self.astros_list.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
-        self.astro_buttons = []
+            self.astros_list = ctk.CTkScrollableFrame(self.main_frame, height=200)
+            self.astros_list.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+            self.astro_buttons = []
 
-        self.info_frame = ctk.CTkFrame(self.main_frame)
-        self.info_frame.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
-        
-        self.lbl_altitude = ctk.CTkLabel(self.info_frame, text="Altitude: --", font=("Arial", 14))
-        self.lbl_altitude.pack(side="left", padx=20, pady=10)
-        
-        self.lbl_azimute = ctk.CTkLabel(self.info_frame, text="Azimute: --", font=("Arial", 14))
-        self.lbl_azimute.pack(side="left", padx=20, pady=10)
+            self.info_frame = ctk.CTkFrame(self.main_frame)
+            self.info_frame.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
+            
+            self.lbl_altitude = ctk.CTkLabel(self.info_frame, text="Altitude: --", font=("Arial", 14))
+            self.lbl_altitude.pack(side="left", padx=20, pady=10)
+            
+            self.lbl_azimute = ctk.CTkLabel(self.info_frame, text="Azimute: --", font=("Arial", 14))
+            self.lbl_azimute.pack(side="left", padx=20, pady=10)
 
-
-    def calibrate_telescope(self):
-        if self.serial_connection and self.serial_connection.is_open:
-            try:
-                self.serial_connection.write(b"CALIBRATE\n")
-                self.connection_status.configure(text="✅ Calibração iniciada...", text_color="blue")
-                
-                # Simula a conclusão da calibração (substitua pela lógica real)
-                time.sleep(25)  # Simula o tempo de calibração
-                self.calibrated = True  # Marca a calibração como concluída
-                
-                # Exibe a mensagem de calibração
-                self.connection_status.configure(text="✅ Norte e Altitude Calibrados!", text_color="blue")
-                print("[PYTHON] Comandos de calibração enviados: Norte e Altitude")
-                
-                # Remove a mensagem após 15 segundos
-                self.after(15000, self.clear_calibration_message)
-                
-                # Habilita os botões dos astros após a calibração
-                self.update_astro_buttons()
-            except Exception as e:
-                self.connection_status.configure(text=f"❌ Erro: {str(e)}", text_color="red")
-                self.calibrated = False  # Marca a calibração como falha
-                
-    def clear_calibration_message(self):
-        """Remove a mensagem de calibração após 15 segundos."""
-        if self.serial_connection and self.serial_connection.is_open:
-            self.connection_status.configure(text=f"✅ Conectado em {self.serial_connection.port}", text_color="green")
-        else:
-            self.connection_status.configure(text="⭕ Desconectado", text_color="red")
 
     # Novo método para alternar o rastreamento
     def toggle_tracking(self):
@@ -204,7 +165,7 @@ class TelescopeControl(ctk.CTk):
                 corner_radius=8,
                 fg_color="#2A2D2E",
                 hover_color="#3D3F41",
-                state="normal" if self.calibrated else "disabled"  # Habilita apenas se calibrado
+                state="normal" 
             )
             btn.pack(fill="x", pady=2)
             self.astro_buttons.append(btn)
@@ -214,17 +175,12 @@ class TelescopeControl(ctk.CTk):
     def stop_tracking(self):
         self.tracking_active = False
         self.current_astro = None
-        
-        # Desabilita os botões de rastreamento
         self.btn_track.configure(state="disabled")
-        self.btn_stop.configure(state="disabled")
-        
         if self.serial_connection and self.serial_connection.is_open:
             try:
                 self.serial_connection.write(b"STOP\n")
             except Exception as e:
                 self.connection_status.configure(text=f"❌ Erro: {str(e)}", text_color="red")
-        
         self.selected_astro = None
         self.lbl_altitude.configure(text="Altitude: --")
         self.lbl_azimute.configure(text="Azimute: --")
@@ -278,10 +234,6 @@ class TelescopeControl(ctk.CTk):
                     )
                     time.sleep(2)
                     self.connection_status.configure(text=f"✅ Conectado em {porta}", text_color="green")
-                    
-                    # Habilita apenas o botão de calibração após a conexão
-                    self.btn_calibrate.configure(state="normal")
-                    
                     # Inicia a thread para ler a saída do Arduino
                     if self.serial_thread is None:
                         self.serial_thread = threading.Thread(target=self.read_from_serial, daemon=True)
@@ -292,10 +244,6 @@ class TelescopeControl(ctk.CTk):
             raise Exception("Nenhuma porta encontrada!")
         except Exception as e:
             self.connection_status.configure(text=f"❌ Erro: {str(e)}", text_color="red")
-            # Mantém os botões desabilitados em caso de erro
-            self.btn_track.configure(state="disabled")
-            self.btn_stop.configure(state="disabled")
-            self.btn_calibrate.configure(state="disabled")
 
     def read_from_serial(self):
         """Thread que lê continuamente a saída do Arduino e imprime no console."""
@@ -354,10 +302,7 @@ class TelescopeControl(ctk.CTk):
         # Atualiza a interface
         self.lbl_altitude.configure(text=f"Altitude: {astro['altitude']:.2f}°")
         self.lbl_azimute.configure(text=f"Azimute: {astro['azimute']:.2f}°")
-        
-        # Habilita os botões de rastreamento apenas após selecionar um astro
-        self.btn_track.configure(state="normal")
-        self.btn_stop.configure(state="normal")
+        self.btn_track.configure(state="normal")  # Habilita o botão de rastreamento
         
         # Envia apenas o posicionamento inicial
         self.send_position_command(astro['altitude'], astro['azimute'])
@@ -377,15 +322,12 @@ class TelescopeControl(ctk.CTk):
                 vel_azi = astro['vel_azi']  # Velocidade em graus/segundo
                 vel_alt = astro['vel_alt']  # Velocidade em graus/segundo
 
-                fator = 2  # Reduzindo para evitar velocidades excessivas
-                safe_vel_alt = max(min(vel_alt * fator, 5.0), -5.0)
-                safe_vel_azi = max(min(vel_azi * fator, 5.0), -5.0)
+                # Limita as velocidades a valores realistas
+                vel_azi = max(min(vel_azi, 0.01), -0.01)  # Exemplo: +/- 0.01 graus/segundo
+                vel_alt = max(min(vel_alt, 0.01), -0.01)
 
-                if abs(safe_vel_azi) > 0.0001 or abs(safe_vel_alt) > 0.0001:
-                    self.send_velocity_command(safe_vel_alt, safe_vel_azi)
-            except Exception as e:
-                self.status_label.configure(text=f"Erro no rastreamento: {str(e)}")
                 # Envia o comando SPEED para ambos azimute e altitude
+                self.send_velocity_command(vel_alt, vel_azi)
 
                 # Atualiza a interface
                 self.lbl_altitude.configure(text=f"Altitude: {astro['altitude']:.2f}°")
