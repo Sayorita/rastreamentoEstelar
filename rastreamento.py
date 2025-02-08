@@ -85,6 +85,7 @@ class TelescopeControl(ctk.CTk):
         self.calibrated = False
         self.title("Controle do Telescópio Espacial 🌌")
         self.geometry("1000x800")
+        self.attributes('-fullscreen', True)
         self.serial_connection = None
         self.serial_thread = None  # Thread para leitura da serial
         self.selected_astro = None
@@ -116,7 +117,7 @@ class TelescopeControl(ctk.CTk):
 
         # Cria o main_frame que contém todo o conteúdo e o divide em duas colunas
         self.main_frame = ctk.CTkFrame(self, corner_radius=10, fg_color=COLOR_BACKGROUND)
-        self.main_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+        self.main_frame.grid(row=0, column=0, padx=0, pady=20, sticky="nsew")
         self.main_frame.grid_columnconfigure(0, weight=1)
         self.main_frame.grid_columnconfigure(1, weight=1)
         self.main_frame.grid_rowconfigure(0, weight=0)  # Título
@@ -273,7 +274,7 @@ class TelescopeControl(ctk.CTk):
             command=lambda: self.send_command("MOVE_DOWN"),
             state="enable",
             fg_color=COLOR_HIGHLIGHT,
-            hover_color="#302C63",
+            hover_color="#1E90FF",
             text_color="white",
             width=80,
             height=80,
@@ -292,7 +293,7 @@ class TelescopeControl(ctk.CTk):
             fg_color=COLOR_HIGHLIGHT,
             text_color=COLOR_TEXT_MAIN,
             hover_color="#1E90FF",
-            width=100,
+            width=10,
             height=40,
             corner_radius=20,
             font=("Arial", 14, "bold")
@@ -305,6 +306,7 @@ class TelescopeControl(ctk.CTk):
         sky_window = ctk.CTkToplevel(self)  # Cria uma nova janela
         sky_window.title("Mapa Celeste")
         sky_window.geometry("600x600")
+        sky_window.attributes('-topmost', True)  # Garante que a janela fique sempre à frente
 
         # Cria a frame para o gráfico na nova janela
         sky_plot = SkyPlotFrame(sky_window)
